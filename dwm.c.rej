@@ -1,42 +1,39 @@
 --- dwm.c
 +++ dwm.c
-@@ -1236,15 +1382,37 @@ mappingnotify(XEvent *e)
- void
- maprequest(XEvent *e)
+@@ -1695,9 +1715,15 @@ void
+ tile(Monitor *m)
  {
-+	Client *c, *swee, *root;
- 	static XWindowAttributes wa;
- 	XMapRequestEvent *ev = &e->xmaprequest;
-+	Swallow *s;
+ 	unsigned int i, n, h, mw, my, ty;
++	float mfacts = 0, sfacts = 0;
+ 	Client *c;
  
- 	if (!XGetWindowAttributes(dpy, ev->window, &wa))
- 		return;
- 	if (wa.override_redirect)
- 		return;
--	if (!wintoclient(ev->window))
--		manage(ev->window, &wa);
-+	switch (wintoclient2(ev->window, &c, &root)) {
-+	case ClientRegular: /* fallthrough */
-+	case ClientSwallowee:
-+		/* Regulars and swallowees are always mapped. Nothing to do. */
-+		break;
-+	case ClientSwallower:
-+		/* Remapping a swallower will simply stop the swallow. */
-+		for (swee = root; swee->swallowedby != c; swee = swee->swallowedby);
-+		swalstop(swee, root);
-+		break;
-+	default:
-+		/* No client is managing the window. See if any swallows match. */
-+		if ((s = swalmatch(ev->window)))
-+			swalmanage(s, ev->window, &wa);
+-	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
++	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++) {
++		if (n < m->nmaster)
++			mfacts += c->cfact;
 +		else
-+			manage(ev->window, &wa);
-+		break;
++			sfacts += c->cfact;
 +	}
-+
-+	/* Reduce decay counter of all swallow instances. */
-+	if (swaldecay)
-+		swaldecayby(1);
+ 	if (n == 0)
+ 		return;
+ 
+@@ -1707,15 +1733,17 @@ tile(Monitor *m)
+ 		mw = m->ww;
+ 	for (i = my = ty = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
+ 		if (i < m->nmaster) {
+-			h = (m->wh - my) / (MIN(n, m->nmaster) - i);
++			h = (m->wh - my) * (c->cfact / mfacts);
+ 			resize(c, m->wx, m->wy + my, mw - (2*c->bw), h - (2*c->bw), 0);
+ 			if (my + HEIGHT(c) < m->wh)
+ 				my += HEIGHT(c);
++     mfacts -= c->cfact;
+ 		} else {
+-			h = (m->wh - ty) / (n - i);
++			h = (m->wh - ty) * (c->cfact / sfacts);
+ 			resize(c, m->wx + mw, m->wy + ty, m->ww - mw - (2*c->bw), h - (2*c->bw), 0);
+ 			if (ty + HEIGHT(c) < m->wh)
+ 				ty += HEIGHT(c);
++     sfacts -= c->cfact;
+ 		}
  }
  
- void
