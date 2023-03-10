@@ -1,16 +1,42 @@
 --- dwm.c
 +++ dwm.c
-@@ -1696,11 +1705,11 @@ tile(Monitor *m)
- 	for (i = my = ty = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
- 		if (i < m->nmaster) {
- 			h = (m->wh - my) / (MIN(n, m->nmaster) - i);
--			resize(c, m->wx, m->wy + my, mw - (2*c->bw), h - (2*c->bw), 0);
-+			resize(c, m->wx, m->wy + my, mw - 2*bw, h - 2*bw, bw, 0);
- 			my += HEIGHT(c);
- 		} else {
- 			h = (m->wh - ty) / (n - i);
--			resize(c, m->wx + mw, m->wy + ty, m->ww - mw - (2*c->bw), h - (2*c->bw), 0);
-+			resize(c, m->wx + mw, m->wy + ty, m->ww - mw - 2*bw, h - 2*bw, bw, 0);
- 			ty += HEIGHT(c);
- 		}
+@@ -1236,15 +1382,37 @@ mappingnotify(XEvent *e)
+ void
+ maprequest(XEvent *e)
+ {
++	Client *c, *swee, *root;
+ 	static XWindowAttributes wa;
+ 	XMapRequestEvent *ev = &e->xmaprequest;
++	Swallow *s;
+ 
+ 	if (!XGetWindowAttributes(dpy, ev->window, &wa))
+ 		return;
+ 	if (wa.override_redirect)
+ 		return;
+-	if (!wintoclient(ev->window))
+-		manage(ev->window, &wa);
++	switch (wintoclient2(ev->window, &c, &root)) {
++	case ClientRegular: /* fallthrough */
++	case ClientSwallowee:
++		/* Regulars and swallowees are always mapped. Nothing to do. */
++		break;
++	case ClientSwallower:
++		/* Remapping a swallower will simply stop the swallow. */
++		for (swee = root; swee->swallowedby != c; swee = swee->swallowedby);
++		swalstop(swee, root);
++		break;
++	default:
++		/* No client is managing the window. See if any swallows match. */
++		if ((s = swalmatch(ev->window)))
++			swalmanage(s, ev->window, &wa);
++		else
++			manage(ev->window, &wa);
++		break;
++	}
++
++	/* Reduce decay counter of all swallow instances. */
++	if (swaldecay)
++		swaldecayby(1);
  }
+ 
+ void
