@@ -1,13 +1,31 @@
 --- dwm.c
 +++ dwm.c
-@@ -816,9 +925,7 @@ drawbar(Monitor *m)
- 
- 	/* draw status first so it can be overdrawn by tags later */
- 	if (m == selmon) { /* status is only drawn on selected monitor */
--		drw_setscheme(drw, scheme[SchemeNorm]);
--		tw = TEXTW(stext) - lrpad + 2; /* 2px right padding */
--		drw_text(drw, m->ww - tw, 0, tw, bh, 0, stext, 0);
-+		tw = m->ww - drawstatusbar(m, bh, stext);
- 	}
- 
- 	for (c = m->clients; c; c = c->next) {
+@@ -443,9 +448,26 @@ buttonpress(XEvent *e)
+ 		if (i < LENGTH(tags)) {
+ 			click = ClkTagBar;
+ 			arg.ui = 1 << i;
+-		} else if (ev->x < x + blw)
++			goto execute_handler;
++		} else if (ev->x < x + blw) {
+ 			click = ClkLtSymbol;
+-		else if (ev->x > selmon->ww - TEXTW(stext))
++			goto execute_handler;
++		}
++
++		x += blw;
++
++		for(i = 0; i < LENGTH(launchers); i++) {
++			x += TEXTW(launchers[i].name);
++			
++			if (ev->x < x) {
++				Arg a;
++				a.v = launchers[i].command;
++				spawn(&a);
++				return;
++			}
++		}	
++
++		if (ev->x > selmon->ww - TEXTW(stext))
+ 			click = ClkStatusText;
+ 		else
+ 			click = ClkWinTitle;
