@@ -23,11 +23,11 @@ static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 static const char *defaulttagapps[] = { "firefox", "discord", NULL, "kitty", NULL, NULL, NULL, NULL, NULL };
 
 /* launcher commands (They must be NULL terminated) */
-static const char* surf[]      = { "surf", "duckduckgo.com", NULL };
+static const char* vimgolf[]      = { "firefox", "--new-tab", "https://www.vimgolf.com/", NULL };
 
 static const Launcher launchers[] = {
        /* command       name to display */
-	{ surf,         "| surf |" },
+	{ vimgolf,         "| vimgolf |" },
 };
 
 static const Rule rules[] = {
