@@ -1,11 +1,13 @@
 --- dwm.c
 +++ dwm.c
-@@ -1921,7 +1942,7 @@ updategeom(void)
- 					m->clients = c->next;
- 					detachstack(c);
- 					c->mon = mons;
--					attach(c);
-+					attachtop(c);
- 					attachstack(c);
- 				}
- 				if (m == selmon)
+@@ -1580,8 +1591,9 @@ setup(void)
+ 	cursor[CurMove] = drw_cur_create(drw, XC_fleur);
+ 	/* init appearance */
+ 	scheme = ecalloc(LENGTH(colors), sizeof(Clr *));
++  unsigned int alphas[] = {borderalpha, baralpha, OPAQUE};
+ 	for (i = 0; i < LENGTH(colors); i++)
+-		scheme[i] = drw_scm_create(drw, colors[i], 3);
++		scheme[i] = drw_scm_create(drw, colors[i], alphas, 3);
+ 	/* init bars */
+ 	updatebars();
+ 	updatestatus();
