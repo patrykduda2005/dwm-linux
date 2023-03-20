@@ -24,7 +24,7 @@ static const char *colors[][3]      = {
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-
+static const char *defaulttagapps[] = { "firefox", "discord", NULL, "kitty", NULL, NULL, NULL, NULL, NULL };
 
 /* launcher commands (They must be NULL terminated) */
 static const char* vimgolf[]      = { "firefox", "--new-tab", "https://www.vimgolf.com/", NULL };
@@ -77,12 +77,6 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, "-l", "20", NULL };
 static const char *termcmd[]  = { "kitty", NULL };
-
-// DEFAULT APPS **********************************
-#define DSCRIPT(name) "<path to the folder containing scripts>/"name
-
-static const char *defaulttagapps[][2] = { {"firefox", "firefox"}, {DSCRIPT("gaming_run.sh"), "discord"}, {NULL, "caprine"}, {"kitty", "kitty"}, {DSCRIPT("pplaylista.sh"), NULL}, {NULL, NULL}, {NULL, NULL}, {NULL, NULL}, {NULL, NULL} };
-//************************************************DEFAULT APPS
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */

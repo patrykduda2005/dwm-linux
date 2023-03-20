@@ -2543,9 +2543,7 @@ swalstopsel(const Arg *unused)
 void
 spawndefault()
 {
-
-    const char *app = defaulttagapps[lastchosentag[selmon->num]][selmon->num];
-
+	const char *app = defaulttagapps[lastchosentag[selmon->num]];
 	if (app) {
 		const char *defaultcmd[] = {app, NULL};
 		Arg a = {.v = defaultcmd};

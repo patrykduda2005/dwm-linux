@@ -19,10 +19,8 @@ options:
 
 ${OBJ}: config.h config.mk
 
-SCRIPTPATH = $(abspath scripts)
-
 config.h:
-	sed 's=<path to the folder containing scripts>=${SCRIPTPATH}=' config.def.h > $@
+	cp config.def.h $@
 
 dwm: ${OBJ}
 	${CC} -o $@ ${OBJ} ${LDFLAGS}
