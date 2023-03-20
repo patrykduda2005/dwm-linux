@@ -253,6 +253,7 @@ static void seturgent(Client *c, int urg);
 static void showhide(Client *c);
 static void sigchld(int unused);
 static void spawn(const Arg *arg);
+static void tagspawn(const Arg *arg);
 static void swal(Client *swer, Client *swee, int manage);
 static void swalreg(Client *c, const char* class, const char* inst, const char* title);
 static void swaldecayby(int decayby);
@@ -2515,6 +2516,17 @@ swalstopsel(const Arg *unused)
 {
 	if (selmon->sel)
 		swalstop(selmon->sel, NULL);
+}
+
+void
+tagspawn(const Arg *arg)
+{
+	for (int i=0; i<LENGTH(tags); ++i) {
+		if (selmon->tagset[selmon->seltags] & (1<<i)) {
+			const Arg a = {.v = tagcommands[i][selmon->num]};
+			spawn(&a);
+		}
+	}
 }
 
 void
