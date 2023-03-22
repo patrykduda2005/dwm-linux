@@ -1019,7 +1019,8 @@ drawbar(Monitor *m)
                 const char *class;
                 XClassHint ch = { NULL, NULL };
                 XGetClassHint(dpy, c->win, &ch);
-                ch.res_class[0] = toupper(ch.res_class[0]);
+                if (ch.res_class)
+                    ch.res_class[0] = toupper(ch.res_class[0]);
                 class = ch.res_class ? ch.res_class : broken;
 				if (!ISVISIBLE(c))
 					continue;
