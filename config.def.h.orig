@@ -5,6 +5,8 @@ static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 10;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
+#define ICONSIZE 16   /* icon size */
+#define ICONSPACING 5 /* space between icon and title */
 static const char *fonts[]          = { "monospace:size=10", "Symbols Nerd Font:size=10" };
 static const char dmenufont[]       = "monospace:size=10";
 static unsigned int baralpha        = 0xCC;
@@ -22,7 +24,6 @@ static const char *colors[][3]      = {
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
-
 
 /* launcher commands (They must be NULL terminated) */
 static const char* vimgolf[]      = { "firefox", "--new-tab", "https://www.vimgolf.com/", NULL };
@@ -76,21 +77,28 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, "-l", "20", NULL };
 static const char *termcmd[]  = { "kitty", NULL };
 
-// DEFAULT APPS **********************************
-#define DSCRIPT(name) "<path to the folder containing scripts>/"name
-
-static const char *defaulttagapps[][2] = { {"firefox", "firefox"}, {DSCRIPT("gaming_run.sh"), "discord"}, {NULL, "caprine"}, {"kitty", "kitty"}, {DSCRIPT("pplaylista.sh"), NULL}, {NULL, NULL}, {NULL, NULL}, {NULL, NULL}, {NULL, NULL} };
-//************************************************DEFAULT APPS
+/* per tag commands for tagspawn function */
+static const char *firefox[] = { "firefox", NULL };
+static const char *discord[] = { "discord", NULL };
+static const char *gaming[] = { "sh", "-c", "app=`printf 'steam\nlutris\nmultimc'|dmenu`; setsid $app;", NULL};
+static const char *playlista[] = {"kitty", "/home/duda/Code/scripts/pplayer", "/home/duda/Code/scripts/playlista", NULL};
+static const char *caprine[] = {"caprine", NULL};
+static const char ** const tagcommands[LENGTH(tags)][2] = {
+	[0] = {firefox, firefox}, /* first tag */
+	[1] = {gaming, discord}, 
+    [2] = {NULL, caprine},
+	[3] = {termcmd, termcmd}, 
+    [4] = {playlista, NULL},
+};
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
-	{ MODKEY,                       XK_s,      spawndefault,   {0} },
+	{ MODKEY,                       XK_s,      tagspawn,       {0} },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
-<<<<<<< HEAD
         { MODKEY|ControlMask,           XK_i,      incnmaster,     {.i = +1 } },
         { MODKEY|ControlMask,           XK_d,      incnmaster,     {.i = -1 } },
         { MODKEY|ControlMask,           XK_h,      setmfact,       {.f = -0.05} },
@@ -98,12 +106,6 @@ static const Key keys[] = {
         { MODKEY|ControlMask,           XK_k,      setcfact,       {.f = +0.25} },
         { MODKEY|ControlMask,           XK_j,      setcfact,       {.f = -0.25} },
         { MODKEY|ControlMask,           XK_o,      setcfact,       {.f =  0.00} },
-=======
-	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
-	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
-	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
-	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
->>>>>>> parent of 6a6ac50 (default-tag-apps patch)
 	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY,                       XK_c,      killclient,     {0} },
