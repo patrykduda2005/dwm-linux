@@ -15,7 +15,7 @@ static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
-static const char col_cyan[]        = "#005577";
+static const char col_cyan[]        = "#4534b7";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
@@ -70,6 +70,7 @@ static const Layout layouts[] = {
 	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
 
+
 /* helper for spawning shell commands in the pre dwm-5.0 fashion */
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
@@ -120,10 +121,10 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_f,      togglefullscr,  {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
-        { MODKEY,                       XK_h,      focusmon,       {.i = -1 } },
-        { MODKEY,                       XK_l,      focusmon,       {.i = +1 } },
-        { MODKEY|ShiftMask,             XK_h,      tagmon,         {.i = -1 } },
-        { MODKEY|ShiftMask,             XK_l,      tagmon,         {.i = +1 } },
+        { MODKEY,                       XK_h,      focusnthmon,       {.i = 1 } },
+        { MODKEY,                       XK_l,      focusnthmon,       {.i = 0 } },
+        { MODKEY|ShiftMask,             XK_h,      tagnthmon,         {.i = 1 } },
+        { MODKEY|ShiftMask,             XK_l,      tagnthmon,         {.i = 0 } },
     { MODKEY|ShiftMask,             XK_k,      pushup,         {0} },
     { MODKEY|ShiftMask,             XK_j,      pushdown,         {0} },
 	{ MODKEY,                       XK_u,      swalstopsel,    {0} },
@@ -137,7 +138,7 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
-    // show, focusstackhid
+    // show, focusstackhid, focusmon, tagmon
 };
 
 /* button definitions */
