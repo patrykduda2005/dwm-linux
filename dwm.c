@@ -555,11 +555,11 @@ buttonpress(XEvent *e)
 			click = ClkTagBar;
 			arg.ui = 1 << i;
             goto execute_handler;
-		} else if (ev->x < x + TEXTW(selmon->ltsymbol)) {
+		} /*else if (ev->x < x + TEXTW(selmon->ltsymbol)) {
 			click = ClkLtSymbol;
             goto execute_handler;
-        }
-            x += TEXTW(selmon->ltsymbol);
+        }*/
+            //x += TEXTW(selmon->ltsymbol);
             for(i = 0; i < LENGTH(launchers); i++) {
                 x += TEXTW(launchers[i].name);
 
@@ -1027,9 +1027,9 @@ drawbar(Monitor *m)
 				urg & 1 << i);
 		x += w;
 	}
-	w = TEXTW(m->ltsymbol);
+//	w = TEXTW(m->ltsymbol);
 	drw_setscheme(drw, scheme[SchemeNorm]);
-	x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
+//	x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
 	
 	for (i = 0; i < LENGTH(launchers); i++)
 	{
