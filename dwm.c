@@ -550,8 +550,10 @@ buttonpress(XEvent *e)
 		i = x = 0;
 		do
 			x += TEXTW(tags[i]);
-		while (ev->x >= x && ++i < LENGTH(tags));
-		if (i < LENGTH(tags)) {
+		while (ev->x >= x && ++i < (unsigned int)((LENGTH(tags) / 2) + 1) );
+		if (i < (unsigned int)((LENGTH(tags) / 2)) + 1) {
+            if (bh / 2 < ev->y && i != 0)
+                i += 4;
 			click = ClkTagBar;
 			arg.ui = 1 << i;
             goto execute_handler;
@@ -1020,12 +1022,14 @@ drawbar(Monitor *m)
 	for (i = 0; i < LENGTH(tags); i++) {
 		w = TEXTW(tags[i]);
 		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeSel : SchemeNorm]);
-		drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
+		drw_text(drw, x, i > 4 ? bh / 2 : 0, w, i == 0 ? bh : bh - (bh / 2), lrpad / 2, tags[i], urg & 1 << i);
 		if (occ & 1 << i)
-			drw_rect(drw, x + boxs, boxs, boxw, boxw,
+			drw_rect(drw, x + boxs, i > 4 ? boxs + bh / 2 : boxs, boxw, boxw,
 				m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
 				urg & 1 << i);
 		x += w;
+        if (i == 4)
+            x = TEXTW(tags[0]);
 	}
 //	w = TEXTW(m->ltsymbol);
 	drw_setscheme(drw, scheme[SchemeNorm]);
