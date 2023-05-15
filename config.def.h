@@ -7,7 +7,7 @@ static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 #define ICONSIZE 16   /* icon size */
 #define ICONSPACING 5 /* space between icon and title */
-static const char *fonts[]          = { "monospace:size=10", "monospace:size=5", "Symbols Nerd Font:size=10" };
+static const char *fonts[]          = { "Symbola:size=10", "monospace:size=5", "Symbols Nerd Font:size=10" };
 static const char dmenufont[]       = "monospace:size=10";
 static unsigned int baralpha        = 0xCC; //0xCC
 static unsigned int borderalpha     = OPAQUE;

@@ -59,7 +59,7 @@
 #define WIDTH(X)                ((X)->w + 2 * (X)->bw)
 #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
 #define TAGMASK                 ((1 << LENGTH(tags)) - 1)
-#define TEXTW(X)                (drw_fontset_getwidth(drw, (X)) + lrpad)
+#define TEXTW(X,F)                (drw_fontset_getwidth(drw, (X),(F)) + lrpad)
 
 #define OPAQUE                  0xffU
 
@@ -549,7 +549,7 @@ buttonpress(XEvent *e)
 	if (ev->window == selmon->barwin) {
 		i = x = 0;
 		do
-			x += TEXTW(tags[i]);
+			x += TEXTW(tags[i], 0);
 		while (ev->x >= x && ++i < (unsigned int)((LENGTH(tags) / 2) + 1) );
 		if (i < (unsigned int)((LENGTH(tags) / 2)) + 1) {
             if (bh / 2 < ev->y && i != 0)
@@ -563,7 +563,7 @@ buttonpress(XEvent *e)
         }*/
             //x += TEXTW(selmon->ltsymbol);
             for(i = 0; i < LENGTH(launchers); i++) {
-                x += TEXTW(launchers[i].name);
+                x += TEXTW(launchers[i].name, 0);
 
                 if (ev->x < x) {
                     Arg a;
@@ -574,7 +574,7 @@ buttonpress(XEvent *e)
             }
 
 		/* 2px right padding */
-		if (ev->x > selmon->ww - TEXTW(stext) + lrpad - 2)
+		if (ev->x > selmon->ww - TEXTW(stext, 0) + lrpad - 2)
 			click = ClkStatusText;
 		else {
 			//x += TEXTW(selmon->ltsymbol);
@@ -586,7 +586,7 @@ buttonpress(XEvent *e)
 						continue;
 					else
 						//x +=(1.0 / (double)m->bt) * m->btw;
-                        x += TEXTW(c->class) + (c->icon ? c->icw + ICONSPACING : 0);
+                        x += TEXTW(c->class, 0) + (c->icon ? c->icw + ICONSPACING : 0);
 				} while (ev->x > x && (c = c->next));
 
 				click = ClkWinTitle;
@@ -895,7 +895,7 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 			if (!isCode) {
 				isCode = 1;
 				text[i] = '\0';
-				w += TEXTW(text) - lrpad;
+				w += TEXTW(text, 0) - lrpad;
 				text[i] = '^';
 				if (text[++i] == 'f')
 					w += atoi(text + ++i);
@@ -907,7 +907,7 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 		}
 	}
 	if (!isCode)
-		w += TEXTW(text) - lrpad;
+		w += TEXTW(text, 0) - lrpad;
 	else
 		isCode = 0;
 	text = p;
@@ -928,8 +928,8 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 			isCode = 1;
 
 			text[i] = '\0';
-			w = TEXTW(text) - lrpad;
-			drw_text(drw, x, 0, w, bh, 0, text, 0);
+			w = TEXTW(text, 0) - lrpad;
+			drw_text(drw, x, 0, w, bh, 0, text, 0, 0);
 
 			x += w;
 
@@ -972,8 +972,8 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 	}
 
 	if (!isCode) {
-		w = TEXTW(text) - lrpad;
-		drw_text(drw, x, 0, w, bh, 0, text, 0);
+		w = TEXTW(text, 0) - lrpad;
+		drw_text(drw, x, 0, w, bh, 0, text, 0, 0);
 	}
 
 	drw_setscheme(drw, scheme[SchemeNorm]);
@@ -1020,16 +1020,16 @@ drawbar(Monitor *m)
 	}
 	x = 0;
 	for (i = 0; i < LENGTH(tags); i++) {
-		w = TEXTW(tags[i]);
+		w = TEXTW(tags[i], 0);
 		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeSel : SchemeNorm]);
-		drw_text(drw, x, i > 4 ? bh / 2 : 0, w, i == 0 ? bh : bh - (bh / 2), lrpad / 2, tags[i], urg & 1 << i);
+		drw_text(drw, x, i > 4 ? bh / 2 : 0, w, i == 0 ? bh : bh - (bh / 2), lrpad / 2, tags[i], urg & 1 << i, 1);
 		if (occ & 1 << i)
 			drw_rect(drw, x + boxs, i > 4 ? boxs + bh / 2 : boxs, boxw, boxw,
 				m == selmon && selmon->sel && selmon->sel->tags & 1 << i,
 				urg & 1 << i);
 		x += w;
         if (i == 4)
-            x = TEXTW(tags[0]);
+            x = TEXTW(tags[0], 0);
 	}
 //	w = TEXTW(m->ltsymbol);
 	drw_setscheme(drw, scheme[SchemeNorm]);
@@ -1037,27 +1037,27 @@ drawbar(Monitor *m)
 	
 	for (i = 0; i < LENGTH(launchers); i++)
 	{
-		w = TEXTW(launchers[i].name);
-		drw_text(drw, x, 0, w, bh, lrpad / 2, launchers[i].name, urg & 1 << i);
+		w = TEXTW(launchers[i].name, 0);
+		drw_text(drw, x, 0, w, bh, lrpad / 2, launchers[i].name, urg & 1 << i, 0);
 		x += w;
 	}
 
 	/* Draw swalsymbol next to ltsymbol. */
 	if (m->sel && m->sel->swallowedby) {
-		w = TEXTW(swalsymbol);
-		x = drw_text(drw, x, 0, w, bh, lrpad / 2, swalsymbol, 0);
+		w = TEXTW(swalsymbol, 2);
+		x = drw_text(drw, x, 0, w, bh, lrpad / 2, swalsymbol, 0, 2);
 	}
 
 	if ((w = m->ww - tw - x) > bh) {
 		if (n > 0) {
-			tw = TEXTW(m->sel->name) + lrpad;
+			tw = TEXTW(m->sel->name, 0) + lrpad;
             mw = (tw >= w || n == 1) ? 0 : (w - tw) / (n - 1);
 
 			i = 0;
 			for (c = m->clients; c; c = c->next) {
 				if (!ISVISIBLE(c) || c == m->sel)
 					continue;
-				tw = TEXTW(c->name);
+				tw = TEXTW(c->name, 0);
 				if(tw < mw)
 					ew += (mw - tw);
 				else
@@ -1070,7 +1070,7 @@ drawbar(Monitor *m)
 			for (c = m->clients; c; c = c->next) {
 				if (!ISVISIBLE(c))
 					continue;
-				tw = MIN(m->sel == c ? w : mw, TEXTW(c->class) + (c->icon ? c->icw + ICONSPACING : 0));
+				tw = MIN(m->sel == c ? w : mw, TEXTW(c->class, 0) + (c->icon ? c->icw + ICONSPACING : 0));
 
 				if (m->sel == c)
 					scm = SchemeSel;
@@ -1083,7 +1083,7 @@ drawbar(Monitor *m)
 				drw_setscheme(drw, scheme[scm]);
 				if (tw > lrpad / 2)
 					//drw_text(drw, x, 0, tw, bh, lrpad / 2, c->name, 0);
-                    drw_text(drw, x, 0, tw, bh, lrpad / 2 + (c->icon ? c->icw + ICONSPACING : 0), c->class, 0);
+                    drw_text(drw, x, 0, tw, bh, lrpad / 2 + (c->icon ? c->icw + ICONSPACING : 0), c->class, 0, 0);
                     if (c->icon) drw_pic(drw, x + lrpad / 2, (bh - c->ich) / 2, c->icw, c->ich, c->icon);
 				if (c->isfloating)
 					drw_rect(drw, x + boxs, boxs, boxw, boxw, c->isfixed, 0);
