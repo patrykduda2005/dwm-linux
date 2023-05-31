@@ -24,7 +24,7 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+static const char *tags[] = { "1", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉" };
 
 /* launcher commands (They must be NULL terminated) */
 static const char* vimgolf[]      = { "firefox", "--new-tab", "https://www.vimgolf.com/", NULL };
