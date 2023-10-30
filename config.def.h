@@ -92,7 +92,7 @@ static const char ** const tagcommands[LENGTH(tags)][2] = {
 	[1] = {gaming, discord}, 
     [2] = {NULL, caprine},
 	[3] = {termcmd, termcmd}, 
-    [4] = {playlista, NULL},
+    [4] = {playlista, playlista},
 };
 
 static const Key keys[] = {
