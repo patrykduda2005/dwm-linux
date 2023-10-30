@@ -103,7 +103,7 @@ struct Client {
 	int basew, baseh, incw, inch, maxw, maxh, minw, minh, hintsvalid;
 	int bw, oldbw;
 	unsigned int tags;
-	int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen;
+	int isfixed, iscentered, isfloating, isalwaysonbottom, isurgent, neverfocus, oldstate, isfullscreen;
 	unsigned int icw, ich; Picture icon;
 	Client *next;
 	Client *snext;
@@ -287,6 +287,7 @@ static void tagnthmon(const Arg *arg);
 static void tile(Monitor *m);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
+static void togglealwaysonbottom(const Arg *arg);
 static void togglefullscr(const Arg *arg);
 static void toggletag(const Arg *arg);
 static void toggleview(const Arg *arg);
@@ -1085,8 +1086,11 @@ drawbar(Monitor *m)
 					//drw_text(drw, x, 0, tw, bh, lrpad / 2, c->name, 0);
                     drw_text(drw, x, 0, tw, bh, lrpad / 2 + (c->icon ? c->icw + ICONSPACING : 0), c->class, 0, 0);
                     if (c->icon) drw_pic(drw, x + lrpad / 2, (bh - c->ich) / 2, c->icw, c->ich, c->icon);
-				if (c->isfloating)
+                if (c->isfloating) {
 					drw_rect(drw, x + boxs, boxs, boxw, boxw, c->isfixed, 0);
+                    if (c->isalwaysonbottom)
+                        drw_rect(drw, x + boxs, bh - boxw, boxw, boxw, 0, 0);
+                }
 				x += tw;
 				w -= tw;
 			}
@@ -2024,6 +2028,17 @@ restack(Monitor *m)
 		return;
 	if (m->sel->isfloating || !m->lt[m->sellt]->arrange)
 		XRaiseWindow(dpy, m->sel->win);
+
+	/* raise the aot window */
+	for(Monitor *m_search = mons; m_search; m_search = m_search->next){
+		for(c = m_search->clients; c; c = c->next){
+			if(c->isalwaysonbottom){
+				XLowerWindow(dpy, c->win);
+				break;
+			}
+		}
+	}
+
 	if (m->lt[m->sellt]->arrange) {
 		wc.stack_mode = Below;
 		wc.sibling = m->barwin;
@@ -2827,7 +2842,34 @@ togglefloating(const Arg *arg)
 			selmon->sel->w - 2 * (borderpx - selmon->sel->bw),
 			selmon->sel->h - 2 * (borderpx - selmon->sel->bw),
 			borderpx, 0);
+    else
+        selmon->sel->isalwaysonbottom = 0; /* disabled, turn this off too*/
 	arrange(selmon);
+}
+
+void
+togglealwaysonbottom(const Arg *arg)
+{
+	if (!selmon->sel)
+		return;
+	if (selmon->sel->isfullscreen)
+		return;
+
+	if(selmon->sel->isalwaysonbottom){
+        selmon->sel->isfloating = 0;
+		selmon->sel->isalwaysonbottom = 0;
+	}else{
+		/* disable others */
+		for(Monitor *m = mons; m; m = m->next)
+			for(Client *c = m->clients; c; c = c->next)
+				c->isalwaysonbottom = 0;
+
+		/* turn on, make it float too */
+		selmon->sel->isfloating = 1;
+		selmon->sel->isalwaysonbottom = 1;
+	}
+
+    arrange(selmon);
 }
 
 void
