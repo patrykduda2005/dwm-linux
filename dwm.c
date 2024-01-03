@@ -2775,6 +2775,10 @@ tagothermon(const Arg *arg, int dir)
 	sendmon(sel, newmon);
 	if (arg->ui & TAGMASK) {
 		sel->tags = arg->ui & TAGMASK;
+        Arg monitor; 
+        monitor.i = dir;
+        focusmon(&monitor);
+        view(arg);
 		focus(NULL);
 		arrange(newmon);
 	}
