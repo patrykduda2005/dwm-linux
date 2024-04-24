@@ -42,6 +42,7 @@ static const Rule rules[] = {
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
 	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	{ "eww",  NULL,       NULL,       1 << 8,       1,           -1 },
 };
 
 /* window swallowing */
@@ -83,7 +84,7 @@ static const char *termcmd[]  = { "kitty", NULL };
 
 /* per tag commands for tagspawn function */
 static const char *firefox[] = { "firefox", NULL };
-static const char *discord[] = { "discord", NULL };
+static const char *discord[] = { "vesktop", NULL };
 static const char *gaming[] = { "sh", "-c", "app=`printf 'steam\nlutris\nprismlauncher'|dmenu`; setsid $app;", NULL};
 static const char *playlista[] = {"kitty", "/home/duda/Code/scripts/pplayer", "/home/duda/Code/scripts/playlista", NULL};
 static const char *caprine[] = {"caprine", NULL};

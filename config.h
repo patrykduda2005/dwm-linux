@@ -83,7 +83,7 @@ static const char *termcmd[]  = { "kitty", NULL };
 
 /* per tag commands for tagspawn function */
 static const char *firefox[] = { "firefox", NULL };
-static const char *discord[] = { "discord", NULL };
+static const char *discord[] = { "vesktop", NULL };
 static const char *gaming[] = { "sh", "-c", "app=`printf 'steam\nlutris\nprismlauncher'|dmenu`; setsid $app;", NULL};
 static const char *playlista[] = {"kitty", "/home/duda/Code/scripts/pplayer", "/home/duda/Code/scripts/playlista", NULL};
 static const char *caprine[] = {"caprine", NULL};
