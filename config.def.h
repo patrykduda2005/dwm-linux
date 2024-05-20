@@ -110,6 +110,10 @@ static const Key keys[] = {
         { MODKEY|ControlMask,           XK_d,      incnmaster,     {.i = -1 } },
         { MODKEY|ControlMask,           XK_h,      setmfact,       {.f = -0.05} },
         { MODKEY|ControlMask,           XK_l,      setmfact,       {.f = +0.05} },
+
+        { MODKEY|ControlMask,           XK_z,      setmfact,       {.f = -0.05} },
+        { MODKEY|ControlMask,           XK_x,      setmfact,       {.f = +0.05} },
+
         { MODKEY|ControlMask,           XK_k,      setcfact,       {.f = +0.25} },
         { MODKEY|ControlMask,           XK_j,      setcfact,       {.f = -0.25} },
         { MODKEY|ControlMask,           XK_o,      setcfact,       {.f =  0.00} },
@@ -129,6 +133,10 @@ static const Key keys[] = {
         { MODKEY,                       XK_l,      focusnthmon,       {.i = 0 } },
         { MODKEY|ShiftMask,             XK_h,      tagnthmon,         {.i = 1 } },
         { MODKEY|ShiftMask,             XK_l,      tagnthmon,         {.i = 0 } },
+        { MODKEY,                       XK_z,      focusnthmon,       {.i = 1 } },
+        { MODKEY,                       XK_x,      focusnthmon,       {.i = 0 } },
+        { MODKEY|ShiftMask,             XK_z,      tagnthmon,         {.i = 1 } },
+        { MODKEY|ShiftMask,             XK_x,      tagnthmon,         {.i = 0 } },
     { MODKEY|ShiftMask,             XK_k,      pushup,         {0} },
     { MODKEY|ShiftMask,             XK_j,      pushdown,         {0} },
 	{ MODKEY,                       XK_u,      swalstopsel,    {0} },
