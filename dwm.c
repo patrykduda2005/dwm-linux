@@ -2718,7 +2718,13 @@ tagspawn(const Arg *arg)
 {
 	for (int i=0; i<LENGTH(tags); ++i) {
 		if (selmon->tagset[selmon->seltags] & (1<<i)) {
-			const Arg a = {.v = tagcommands[i][selmon->num]};
+			//const Arg a = {.v = tagcommands[i][selmon->num]};
+            char index[3];
+            sprintf(index, "%d", i);
+            char monindex[2];
+            sprintf(monindex, "%d", selmon->num);
+            char *script[] = {"/home/duda/Code/scripts/tagspawn.sh", index, monindex, NULL};
+            const Arg a = {.v = script};
 			spawn(&a);
 		}
 	}
