@@ -126,7 +126,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY|ControlMask,           XK_space,  togglealwaysonbottom, {0} },
-	{ MODKEY|ShiftMask,             XK_f,      togglefullscr,  {0} },
+	{ MODKEY,                       XK_g,      togglefullscr,  {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
         { MODKEY,                       XK_h,      focusnthmon,       {.i = 1 } },
@@ -149,7 +149,7 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+	{ MODKEY|ShiftMask|ControlMask,             XK_q,      quit,           {0} },
     // show, focusstackhid, focusmon, tagmon
 };
 
